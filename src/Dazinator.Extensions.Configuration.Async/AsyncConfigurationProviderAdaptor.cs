@@ -1,7 +1,4 @@
 namespace Dazinator.Extensions.Configuration.Tests;
-
-using System.Reflection.Metadata;
-using System.Threading.Channels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 
