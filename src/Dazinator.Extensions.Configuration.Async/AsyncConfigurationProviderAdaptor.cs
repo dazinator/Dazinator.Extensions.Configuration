@@ -39,25 +39,3 @@ public class AsyncConfigurationProviderAdaptor : ConfigurationProvider, IDisposa
     }
 }
 
-public interface IAsyncConfigurationProvider
-{
-    Task<IDictionary<string, string>> LoadAsync();
-
-    IChangeToken GetReloadToken();
-}
-
-public class DelegateAsyncConfigurationProvider : IAsyncConfigurationProvider
-{
-    private readonly Func<IChangeToken> _changeTokenProducer;
-    private readonly Func<Task<IDictionary<string, string>>> _onLoadAsync;
-
-    public DelegateAsyncConfigurationProvider(Func<IChangeToken> changeTokenProducer, Func<Task<IDictionary<string, string>>> onLoadAsync)
-    {
-        _changeTokenProducer = changeTokenProducer;
-        _onLoadAsync = onLoadAsync;
-    }
-
-    public IChangeToken GetReloadToken() => _changeTokenProducer();
-    public Task<IDictionary<string, string>> LoadAsync() => _onLoadAsync();
-}
-
