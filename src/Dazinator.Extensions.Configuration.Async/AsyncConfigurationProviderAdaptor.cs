@@ -1,5 +1,7 @@
 namespace Dazinator.Extensions.Configuration.Tests;
 
+using System.Reflection.Metadata;
+using System.Threading.Channels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 
@@ -14,14 +16,20 @@ public class AsyncConfigurationProviderAdaptor : ConfigurationProvider, IDisposa
         _asyncProvider = asyncProvider;
         _disposeAsyncProviderOnDispose = disposeAsyncProviderOnDispose;
         var changeTokenProducer = () => _asyncProvider.GetReloadToken();
-        _changeTokenRegistration = changeTokenProducer.OnChange(async () => Data = await _asyncProvider.LoadAsync().ConfigureAwait(false));
+        _changeTokenRegistration = changeTokenProducer.OnChange(async () => {            
+            Data = await _asyncProvider.LoadAsync().ConfigureAwait(false);
+            OnReload(); // handles the notification of changes to OptionsMonitor.
+        } );
     }
+
+   
 
     public override void Load()
     {
+        base .Load();
         // Initially we set empty dictionary, then we will load it async.
         var dic = new Dictionary<string, string>();
-        Data = dic;
+        Data = dic;        
     }
 
     public void Dispose()

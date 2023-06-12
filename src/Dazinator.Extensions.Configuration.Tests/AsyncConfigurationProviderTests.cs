@@ -2,10 +2,14 @@ namespace Dazinator.Extensions.Configuration.Tests;
 
 using System;
 using System.Collections.Generic;
+using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Shouldly;
+using Xunit.Abstractions;
 using Xunit.Categories;
 
 [UnitTest]
@@ -72,15 +76,16 @@ public class AsyncConfigurationProviderTests
         var setting = configuration["key1"];
         setting.ShouldBeNull();
 
+        bool signalled = false;
+        using var registration = ChangeToken.OnChange(() => configuration.GetReloadToken(), () => signalled = true);
+
         triggerTokenCtsSource.Cancel();
         await Task.Delay(200);
 
         setting = configuration["key1"];
         setting.ShouldBe("value1");
-
+        signalled.ShouldBeTrue();
     }
-
-
 
     public class TestAsyncConfigurationProvider : IAsyncConfigurationProvider, IDisposable
     {
@@ -101,4 +106,60 @@ public class AsyncConfigurationProviderTests
             return result;
         }
     }
+
+    [Fact]
+    public async Task CanUseOptionsMonitor()
+    {
+
+        var configurationBuilder = new ConfigurationBuilder();
+        using var cts = new CancellationTokenSource();
+
+        configurationBuilder.AddAsyncProvider((source) =>
+        {
+
+            var changeTokenProducer = () =>
+            {
+                return new CancellationChangeToken(cts.Token);
+            };
+
+            source.ChangeTokenProducer = changeTokenProducer;
+
+            source.OnLoadConfigurationAsync = async () =>
+            {
+                await Task.Yield();
+                return new Dictionary<string, string>()
+                {
+                    { "Key1", "value1" }
+                };
+            };
+        });
+
+        var configuration = configurationBuilder.Build();
+
+        var services = new ServiceCollection();
+        services.AddOptions();
+        services.Configure<MyOptions>(configuration);
+
+
+        var sp = services.BuildServiceProvider();
+        using (var scope = sp.CreateScope())
+        {
+            var options = sp.GetRequiredService<IOptionsMonitor<MyOptions>>();
+
+            options.CurrentValue.ShouldNotBeNull();
+            options.CurrentValue.Key1.ShouldBeNull();
+
+            cts.Cancel();
+
+            await Task.Delay(200);
+
+            options.CurrentValue.Key1.ShouldBe("value1");
+        }
+    }
+
+    public class MyOptions
+    {
+        public string Key1 { get; set; }
+    }
+
 }
