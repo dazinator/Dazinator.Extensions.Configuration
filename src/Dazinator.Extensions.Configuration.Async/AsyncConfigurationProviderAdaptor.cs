@@ -22,8 +22,7 @@ public class AsyncConfigurationProviderAdaptor : ConfigurationProvider, IDisposa
    
 
     public override void Load()
-    {
-        base .Load();
+    {       
         // Initially we set empty dictionary, then we will load it async.
         var dic = new Dictionary<string, string>();
         Data = dic;        
