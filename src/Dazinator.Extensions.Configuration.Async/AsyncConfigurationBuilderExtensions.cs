@@ -1,5 +1,6 @@
 namespace Dazinator.Extensions.Configuration.Tests;
 
+using Dazinator.Extensions.Configuration.Async;
 using Microsoft.Extensions.Configuration;
 
 public static class AsyncConfigurationBuilderExtensions

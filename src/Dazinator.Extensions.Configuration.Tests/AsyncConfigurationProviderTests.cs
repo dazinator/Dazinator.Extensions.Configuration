@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
+using Dazinator.Extensions.Configuration.Async;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

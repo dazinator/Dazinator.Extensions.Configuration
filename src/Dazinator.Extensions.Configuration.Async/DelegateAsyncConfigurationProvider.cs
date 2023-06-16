@@ -1,4 +1,4 @@
-﻿namespace Dazinator.Extensions.Configuration.Tests;
+namespace Dazinator.Extensions.Configuration.Async;
 using Microsoft.Extensions.Primitives;
 
 public class DelegateAsyncConfigurationProvider : IAsyncConfigurationProvider
