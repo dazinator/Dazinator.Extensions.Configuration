@@ -11,11 +11,16 @@
 
   <ItemGroup>
     <PackageReference Include="Changify" Version="0.2.0-alpha.43" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="Testcontainers" Version="3.0.0" />
+    <PackageReference Include="Testcontainers.MsSql" Version="3.0.0" />
     <PackageReference Include="Shouldly" Version="4.2.1" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.categories" Version="2.0.6" />
@@ -31,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dazinator.Extensions.Configuration.Async\Dazinator.Extensions.Configuration.Async.csproj" />
+    <ProjectReference Include="..\Dazinator.Extensions.Configuration.SqlServer\Dazinator.Extensions.Configuration.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>

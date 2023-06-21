@@ -2,7 +2,6 @@ namespace Dazinator.Extensions.Configuration.Tests;
 
 using System;
 using System.Collections.Generic;
-using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
 using Dazinator.Extensions.Configuration.Async;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Shouldly;
-using Xunit.Abstractions;
 using Xunit.Categories;
 
 [UnitTest]

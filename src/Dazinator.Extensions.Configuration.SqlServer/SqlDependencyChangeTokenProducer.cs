@@ -1,4 +1,4 @@
-﻿namespace Dazinator.Extensions.Configuration.SqlServer;
+namespace Dazinator.Extensions.Configuration.SqlServer;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Data.SqlClient;
 
@@ -16,9 +16,10 @@ public class SqlDependencyChangeTokenProducer : IChangeTokenProducer, IDisposabl
     {
     }
 
-    public SqlDependencyChangeTokenProducer(SqlConnection connection, SqlCommand? command, string commandText = "", bool shouldDispose = true) 
+    public SqlDependencyChangeTokenProducer(SqlConnection connection, SqlCommand? command, string commandText = "", bool shouldDispose = true)
     {
         _connection = connection;
+        // SqlDependency.Start(connection.ConnectionString);
         _command = command ?? connection.CreateCommand();
         if (string.IsNullOrWhiteSpace(_command.CommandText))
         {
@@ -41,6 +42,7 @@ public class SqlDependencyChangeTokenProducer : IChangeTokenProducer, IDisposabl
     {
         _sqlDependency.OnChange -= DependencyOnChange;
         _cancellationTokenSource.Dispose();
+        ////  SqlDependency.Stop(_connection.ConnectionString);
         if (_shouldDispose)
         {
             _command.Dispose();
