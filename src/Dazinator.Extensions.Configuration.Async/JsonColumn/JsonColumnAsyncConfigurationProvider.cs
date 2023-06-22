@@ -40,6 +40,9 @@ public class JsonColumnAsyncConfigurationProvider : IAsyncConfigurationProvider,
                 var configSectionPath = item.configSectionPath; // e.g MySection:MySubSection or to support named options binding MySection:MySubSection-[name]
                 _logger.LogTrace("Loading configuration for section {configSectionPath}", configSectionPath);
 
+                // todo: if we had a rowversion we could compare and only if its changed bother to load the json otherwise we could keep the existing config for this section?
+                // might be complicated consider two seperate records "foo:bar" and "foo:bar:baz" - if we are currently processing "foo:bar" and it hasn't' changed, we can't assume all keys with "foo:bar" prefix haven't changed because "foo:bar:baz" might have changed.
+                // so this implies some sort order or further complication to the processing. For not just easier to process all configuration from scratch on each reload.
                 var jsonValue = item.json;
                 var configData = LoadConfiguration(jsonValue);
 
