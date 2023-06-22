@@ -83,6 +83,14 @@ jobs:
     - name: Test
       run: dotnet test src -c Release --no-build --no-restore --verbosity normal
 
+    - name: Upload Failed Verification Results
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: verify-test-results
+        path: |
+          **/*.received.*
+
     # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
     - name: Configure nuget
       run: dotnet nuget add source --username dazinator --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/dazinator/index.json"

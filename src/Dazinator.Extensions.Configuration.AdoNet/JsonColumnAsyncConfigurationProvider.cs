@@ -1,18 +1,20 @@
-namespace Dazinator.Extensions.Configuration.AdoNetAsync;
+namespace Dazinator.Extensions.Configuration.AdoNet;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Dazinator.Extensions.Configuration.Async;
+using Dazinator.Extensions.Configuration.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 
-
-public class DatabaseAsyncConfigurationProvider : IAsyncConfigurationProvider, IDisposable
+/// <summary>
+/// An <see cref="IAsyncConfigurationProvider"/> that supplies configuration from a <see cref="DbCommand"/> that returns a result set where each row has a column for the config section path, and a column for JSON object representing the configuration that will be mapped at that path."/>
+/// </summary>
+public class JsonColumnAsyncConfigurationProvider : IAsyncConfigurationProvider, IDisposable
 {
 
-    private readonly DatabaseAsyncConfigurationProviderOptions _options;
-    private readonly ILogger<DatabaseAsyncConfigurationProvider> _logger;
+    private readonly JsonColumnAsyncConfigurationProviderOptions _options;
+    private readonly ILogger<JsonColumnAsyncConfigurationProvider> _logger;
     private readonly IChangeTokenProducer? _changeTokenProducer;
 
     public const string ConfigSectionPathColumnName = "ConfigSectionPath";
@@ -20,7 +22,7 @@ public class DatabaseAsyncConfigurationProvider : IAsyncConfigurationProvider, I
     public const string TableName = "Options";
 
 
-    public DatabaseAsyncConfigurationProvider(DatabaseAsyncConfigurationProviderOptions options, ILogger<DatabaseAsyncConfigurationProvider> logger)
+    public JsonColumnAsyncConfigurationProvider(JsonColumnAsyncConfigurationProviderOptions options, ILogger<JsonColumnAsyncConfigurationProvider> logger)
     {
         _options = options;
         _logger = logger;
@@ -64,7 +66,7 @@ public class DatabaseAsyncConfigurationProvider : IAsyncConfigurationProvider, I
                 _logger.LogTrace("Loading configuration for section {configSectionPath}", configSectionPath);
 
                 var jsonValue = reader.GetString(1);
-                var configData = DeserializeNestedProperties(jsonValue);
+                var configData = LoadConfiguration(jsonValue);
 
                 if (configData != null)
                 {
@@ -83,41 +85,7 @@ public class DatabaseAsyncConfigurationProvider : IAsyncConfigurationProvider, I
         }
     }
 
-    private Dictionary<string, string> DeserializeNestedProperties(string json)
-    {
-        var configData = new Dictionary<string, string>();
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        options.Converters.Add(new NestedPropertiesConverter(configData));
-
-        var jsonObject = JsonSerializer.Deserialize<Dictionary<string, object>>(json, options);
-
-        if (jsonObject != null)
-        {
-            foreach (var (key, value) in jsonObject)
-            {
-                VisitProperty(key, value, "", configData);
-            }
-        }
-
-        return configData;
-    }
-
-    private void VisitProperty(string propertyName, object propertyValue, string currentPath, Dictionary<string, string> configData)
-    {
-        var fullPath = $"{currentPath}{propertyName}:";
-
-        if (propertyValue is IDictionary<string, object> nestedObject)
-        {
-            foreach (var (key, value) in nestedObject)
-            {
-                VisitProperty(key, value, fullPath, configData);
-            }
-        }
-        else
-        {
-            configData[fullPath] = propertyValue?.ToString();
-        }
-    }
+    private IDictionary<string, string?> LoadConfiguration(string json) => JsonConfigurationParser.Parse(json);
 
     public void Dispose()
     {

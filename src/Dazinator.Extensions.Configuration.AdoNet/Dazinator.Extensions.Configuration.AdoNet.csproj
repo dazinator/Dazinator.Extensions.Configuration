@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dazinator.Extensions.Configuration.Async\Dazinator.Extensions.Configuration.Async.csproj" />
+    <ProjectReference Include="..\Dazinator.Extensions.Configuration.Json\Dazinator.Extensions.Configuration.Json.csproj" />
   </ItemGroup>
 
   <ItemGroup>

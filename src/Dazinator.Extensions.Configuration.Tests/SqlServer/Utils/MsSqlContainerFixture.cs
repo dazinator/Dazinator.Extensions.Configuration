@@ -1,6 +1,6 @@
 namespace Dazinator.Extensions.Configuration.Tests.SqlServer.Utils;
-using Dazinator.Extensions.Configuration.Tests.Utils;
 using System.Threading.Tasks;
+using Dazinator.Extensions.Configuration.Tests.Utils;
 using Testcontainers.MsSql;
 
 public class MsSqlContainerFixture : ContainerFixture<MsSqlContainer>

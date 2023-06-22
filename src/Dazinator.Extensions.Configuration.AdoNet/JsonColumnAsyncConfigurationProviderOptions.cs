@@ -1,8 +1,8 @@
-namespace Dazinator.Extensions.Configuration.AdoNetAsync;
+namespace Dazinator.Extensions.Configuration.AdoNet;
 using System.Data.Common;
 using Microsoft.Extensions.Primitives;
 
-public class DatabaseAsyncConfigurationProviderOptions
+public class JsonColumnAsyncConfigurationProviderOptions
 {
     public Func<DbConnection> ConnectionFactory { get; set; }
 

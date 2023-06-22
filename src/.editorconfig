@@ -78,6 +78,16 @@ end_of_line = lf
 [Makefile]
 indent_style = tab
 
+# Verify settings see https://github.com/VerifyTests/Verify/blob/main/docs/wiz/Windows_VisualStudio_Gui_xUnit_GitHubActions.md#source-control
+[*.{received,verified}.{txt,xml,json}]
+charset = "utf-8-bom"
+end_of_line = lf
+indent_size = unset
+indent_style = unset
+insert_final_newline = false
+tab_width = unset
+trim_trailing_whitespace = false
+
 ##########################################
 # .NET Language Conventions
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions
@@ -423,6 +433,7 @@ dotnet_naming_rule.parameters_rule.style = camel_case_style
 dotnet_naming_rule.parameters_rule.severity = warning
 tab_width = 4
 end_of_line = crlf
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 
 ##########################################
 # License

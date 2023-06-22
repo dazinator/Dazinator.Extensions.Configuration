@@ -1,0 +1,18 @@
+﻿{
+  brief: False,
+  clothes: 767666682.3025572,
+  forward: such,
+  nervous:0:brave: -1044951554,
+  nervous:0:city: 1824557784.2769182,
+  nervous:0:highway: pattern,
+  nervous:0:necessary: -763993287,
+  nervous:0:oil: False,
+  nervous:0:roar: bread,
+  nervous:1: False,
+  nervous:2: 1052146982,
+  nervous:3: True,
+  nervous:4: False,
+  nervous:5: 1089327723,
+  note: 137599294,
+  quarter: True
+}

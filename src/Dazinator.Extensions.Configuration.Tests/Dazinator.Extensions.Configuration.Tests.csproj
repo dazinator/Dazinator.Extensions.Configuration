@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
+    <!--<LangVersion>preview</LangVersion>-->
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
@@ -22,6 +22,7 @@
     <PackageReference Include="Testcontainers" Version="3.0.0" />
     <PackageReference Include="Testcontainers.MsSql" Version="3.0.0" />
     <PackageReference Include="Shouldly" Version="4.2.1" />
+    <PackageReference Include="Verify.Xunit" Version="20.4.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.categories" Version="2.0.6" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
@@ -36,7 +37,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dazinator.Extensions.Configuration.Async\Dazinator.Extensions.Configuration.Async.csproj" />
+    <ProjectReference Include="..\Dazinator.Extensions.Configuration.Json\Dazinator.Extensions.Configuration.Json.csproj" />
     <ProjectReference Include="..\Dazinator.Extensions.Configuration.SqlServer\Dazinator.Extensions.Configuration.SqlServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Json\JsonConfigurationParserTests.CanAddAsyncDelegateProvider.verified.txt">
+      <DependentUpon>JsonConfigurationParserTests.cs</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>
