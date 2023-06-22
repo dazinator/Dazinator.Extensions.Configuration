@@ -1,6 +1,6 @@
 namespace Dazinator.Extensions.Configuration.SqlServer;
-using Microsoft.Extensions.Primitives;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Primitives;
 
 public class SqlDependencyChangeTokenProducer : IChangeTokenProducer, IDisposable
 {
@@ -41,7 +41,7 @@ public class SqlDependencyChangeTokenProducer : IChangeTokenProducer, IDisposabl
     public void Dispose()
     {
         _sqlDependency.OnChange -= DependencyOnChange;
-        _cancellationTokenSource.Dispose();
+        _cancellationTokenSource?.Dispose();
         ////  SqlDependency.Stop(_connection.ConnectionString);
         if (_shouldDispose)
         {

@@ -1,6 +1,6 @@
 namespace Dazinator.Extensions.Configuration.AdoNetAsync;
-using Microsoft.Extensions.Primitives;
 using System.Data.Common;
+using Microsoft.Extensions.Primitives;
 
 public class DatabaseAsyncConfigurationProviderOptions
 {

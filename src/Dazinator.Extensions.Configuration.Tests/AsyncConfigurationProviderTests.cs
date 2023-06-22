@@ -75,7 +75,7 @@ public class AsyncConfigurationProviderTests
         var setting = configuration["key1"];
         setting.ShouldBeNull();
 
-        bool signalled = false;
+        var signalled = false;
         using var registration = ChangeToken.OnChange(() => configuration.GetReloadToken(), () => signalled = true);
 
         triggerTokenCtsSource.Cancel();
@@ -116,10 +116,7 @@ public class AsyncConfigurationProviderTests
         configurationBuilder.AddAsyncProvider((source) =>
         {
 
-            var changeTokenProducer = () =>
-            {
-                return new CancellationChangeToken(cts.Token);
-            };
+            var changeTokenProducer = () => new CancellationChangeToken(cts.Token);
 
             source.ChangeTokenProducer = changeTokenProducer;
 

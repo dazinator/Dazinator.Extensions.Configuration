@@ -3,15 +3,20 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
 
+/// <summary>
+///  Represents a SqlDependency lifetime, calls SqlDependency.Start() on InitialiseAsync() and SqlDependency.Stop() when disposed.
+/// </summary>
 public class SqlDependencyLifetime : IDisposable
 {
     private readonly string _connectionString;
 
-    public SqlDependencyLifetime(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
+    public SqlDependencyLifetime(string connectionString) => _connectionString = connectionString;
 
+    /// <summary>
+    /// Will call SqlDependency.Start() and optionally enable broker on the database.
+    /// </summary>
+    /// <param name="enableBroker"></param>
+    /// <returns></returns>
     public async Task InitialiseAsync(bool enableBroker)
     {
         if (enableBroker)
@@ -29,9 +34,6 @@ public class SqlDependencyLifetime : IDisposable
 
         SqlDependency.Start(_connectionString);
     }
-    public void Dispose()
-    {
-        SqlDependency.Stop(_connectionString);
-    }
+    public void Dispose() => SqlDependency.Stop(_connectionString);
 }
 

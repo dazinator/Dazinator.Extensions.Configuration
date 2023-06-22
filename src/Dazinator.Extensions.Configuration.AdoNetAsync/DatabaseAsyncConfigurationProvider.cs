@@ -1,11 +1,11 @@
 namespace Dazinator.Extensions.Configuration.AdoNetAsync;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Dazinator.Extensions.Configuration.Async;
-using Microsoft.Extensions.Primitives;
-using System.Data.Common;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 
 public class DatabaseAsyncConfigurationProvider : IAsyncConfigurationProvider, IDisposable

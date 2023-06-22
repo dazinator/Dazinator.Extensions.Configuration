@@ -1,27 +1,18 @@
 namespace Dazinator.Extensions.Configuration.AdoNetAsync;
 
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class NestedPropertiesConverter : JsonConverter<IDictionary<string, object>>
 {
     private readonly Dictionary<string, string> _configData;
 
-    public NestedPropertiesConverter(Dictionary<string, string> configData)
-    {
-        _configData = configData;
-    }    
+    public NestedPropertiesConverter(Dictionary<string, string> configData) => _configData = configData;
 
-    public override void Write(Utf8JsonWriter writer, IDictionary<string, object> value, JsonSerializerOptions options)
-    {
-        JsonSerializer.Serialize(writer, value, options);
-    }
+    public override void Write(Utf8JsonWriter writer, IDictionary<string, object> value, JsonSerializerOptions options) => JsonSerializer.Serialize(writer, value, options);
 
-    public override bool CanConvert(Type typeToConvert)
-    {
-        return typeof(IDictionary<string, object>).IsAssignableFrom(typeToConvert);
-    }
+    public override bool CanConvert(Type typeToConvert) => typeof(IDictionary<string, object>).IsAssignableFrom(typeToConvert);
 
     public override IDictionary<string, object> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

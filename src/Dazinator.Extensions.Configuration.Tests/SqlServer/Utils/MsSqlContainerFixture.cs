@@ -1,4 +1,5 @@
-namespace Dazinator.Extensions.Configuration.Tests.Utils;
+namespace Dazinator.Extensions.Configuration.Tests.SqlServer.Utils;
+using Dazinator.Extensions.Configuration.Tests.Utils;
 using System.Threading.Tasks;
 using Testcontainers.MsSql;
 
@@ -11,7 +12,7 @@ public class MsSqlContainerFixture : ContainerFixture<MsSqlContainer>
     {
         var container = new MsSqlBuilder()
          .WithPassword("yourStrong(!)Password")
-          
+
          .Build();
 
         return container;
