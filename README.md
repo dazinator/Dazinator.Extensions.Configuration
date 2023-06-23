@@ -1,6 +1,9 @@
 ## Problem
 
-This repository is home to a number of libraries that build upon `Microsoft.Extensions.Configuration`
+This repository is home to a number of libraries that build upon `Microsoft.Extensions.Configuration` including a SQL Server provider, and an Async provider.
+
+Why a Sql server provider? https://gamma.app/docs/Custom-dotnet-configuration-provider-for-SQL-Server-with-realtime-ad56s549my9xtxq
+
 
 ### Async
 
