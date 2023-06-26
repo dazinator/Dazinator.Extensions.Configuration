@@ -1,6 +1,5 @@
-using Dazinator.Extensions.Configuration.Tests;
-
 namespace Dazinator.Extensions.Configuration.Tests.Async;
+using Dazinator.Extensions.Configuration.Tests;
 
 using System;
 using System.Collections.Generic;

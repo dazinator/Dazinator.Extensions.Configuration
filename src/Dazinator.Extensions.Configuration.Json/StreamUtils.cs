@@ -1,4 +1,4 @@
-﻿namespace Dazinator.Extensions.Configuration.Json;
+namespace Dazinator.Extensions.Configuration.Json;
 
 public static class StreamUtils
 {

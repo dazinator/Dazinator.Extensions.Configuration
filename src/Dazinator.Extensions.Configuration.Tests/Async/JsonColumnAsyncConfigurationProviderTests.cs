@@ -1,10 +1,10 @@
 namespace Dazinator.Extensions.Configuration.Tests.Async;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit.Categories;
 using Dazinator.Extensions.Configuration.AdoNet;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Xunit.Categories;
 
 
 [UsesVerify]
@@ -15,8 +15,10 @@ public class JsonColumnAsyncConfigurationProviderTests
     [Fact]
     public Task LoadAsync_ReturnsExpectedConfiguration()
     {
-        var options = new JsonColumnAsyncConfigurationProviderOptions();
-        options.GetConfigurationItems = GetConfigurationItems;
+        var options = new JsonColumnAsyncConfigurationProviderOptions
+        {
+            GetConfigurationItems = GetConfigurationItemsSetOne
+        };
 
         //  options.GetChangeTokenProducer = () => EmptyChangeToken.Instance;
         var services = new ServiceCollection();
@@ -24,16 +26,17 @@ public class JsonColumnAsyncConfigurationProviderTests
         using var sp = services.BuildServiceProvider();
 
         using var scope = sp.CreateScope();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<JsonColumnAsyncConfigurationProvider>>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<JsonItemAsyncConfigurationProvider>>();
 
-        using var sut = new JsonColumnAsyncConfigurationProvider(options, logger);
+        using var sut = new JsonItemAsyncConfigurationProvider(options, logger);
         var results = sut.LoadAsync();
 
         return Verify(results);
     }
 
-    private async IAsyncEnumerable<JsonConfigurationItem> GetConfigurationItems()
+    private async Task<IList<JsonConfigurationItem>> GetConfigurationItemsSetOne()
     {
+        var results = new List<JsonConfigurationItem>();
         for (var i = 1; i <= 10; i++)
         {
             var result = new JsonConfigurationItem()
@@ -43,8 +46,9 @@ public class JsonColumnAsyncConfigurationProviderTests
             };
 
             //  await Task.Delay(1000);
-            yield return result;
+            results.Add(result);
         }
+        return results;
     }
 
 }
