@@ -4,21 +4,18 @@ using System.Threading.Tasks;
 using Dazinator.Extensions.Configuration.AdoNet;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit.Categories;
 
 
 [UsesVerify]
 [UnitTest]
-public class JsonColumnAsyncConfigurationProviderTests
+public class JsonItemAsyncConfigurationProviderTests
 {
 
     [Fact]
     public Task LoadAsync_ReturnsExpectedConfiguration()
     {
-        var options = new JsonColumnAsyncConfigurationProviderOptions
-        {
-            GetConfigurationItems = GetConfigurationItemsSetOne
-        };
 
         //  options.GetChangeTokenProducer = () => EmptyChangeToken.Instance;
         var services = new ServiceCollection();
@@ -28,7 +25,10 @@ public class JsonColumnAsyncConfigurationProviderTests
         using var scope = sp.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<JsonItemAsyncConfigurationProvider>>();
 
-        using var sut = new JsonItemAsyncConfigurationProvider(options, logger);
+        var mockAdaptor = new Mock<IAsyncItemProvider<IList<JsonConfigurationItem>>>();
+        mockAdaptor.Setup(x => x.LoadAsync()).Returns(GetConfigurationItemsSetOne);
+
+        var sut = new JsonItemAsyncConfigurationProvider(mockAdaptor.Object, logger);
         var results = sut.LoadAsync();
 
         return Verify(results);

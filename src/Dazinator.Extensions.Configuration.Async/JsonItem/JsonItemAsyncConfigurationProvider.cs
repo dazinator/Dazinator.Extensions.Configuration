@@ -9,33 +9,35 @@ using Microsoft.Extensions.Primitives;
 /// <summary>
 /// An <see cref="IAsyncConfigurationProvider"/> that maps onfiguration from a list of <see cref="JsonConfigurationItem"/>s."/>
 /// </summary>
-public class JsonItemAsyncConfigurationProvider : IAsyncConfigurationProvider, IDisposable
+public class JsonItemAsyncConfigurationProvider : IAsyncConfigurationProvider
 {
-
-    private readonly JsonColumnAsyncConfigurationProviderOptions _options;
+    private readonly IAsyncItemProvider<IList<JsonConfigurationItem>> _asyncItemsProvider;
+    // private readonly Func<IChangeToken> _changeTokenProducer;
     private readonly ILogger<JsonItemAsyncConfigurationProvider> _logger;
-    private readonly IChangeTokenProducer? _changeTokenProducer;
+    private readonly bool _disposeItemsProviderOnDispose;
 
-
-    public JsonItemAsyncConfigurationProvider(JsonColumnAsyncConfigurationProviderOptions options, ILogger<JsonItemAsyncConfigurationProvider> logger)
+    public JsonItemAsyncConfigurationProvider(
+        IAsyncItemProvider<IList<JsonConfigurationItem>> asyncItemsProvider,
+        ///  Func<Task<IList<JsonConfigurationItem>>> loadItemsFactory,
+        ILogger<JsonItemAsyncConfigurationProvider> logger,
+       bool disposeItemsProviderOnDispose = true)
     {
-        _options = options;
+        _asyncItemsProvider = asyncItemsProvider;
+        // _changeTokenProducer = changeTokenProducer;
         _logger = logger;
-        _changeTokenProducer = options.GetChangeTokenProducer?.Invoke() ?? null;
+        _disposeItemsProviderOnDispose = disposeItemsProviderOnDispose;
     }
 
-    public IChangeToken GetReloadToken() => _changeTokenProducer?.Produce() ?? EmptyChangeToken.Instance;
+    public IChangeToken GetReloadToken() => _asyncItemsProvider?.GetReloadToken() ?? EmptyChangeToken.Instance;
 
     public async Task<IDictionary<string, string>> LoadAsync()
     {
         _logger.LogDebug("Loading configuration.");
         var data = new Dictionary<string, string>();
-        var conf = _options.GetConfigurationItems?.Invoke();
-        if (conf != null)
+        var items = await _asyncItemsProvider.LoadAsync();
+        if (items != null)
         {
-            // read all rows into a dictionary of config keys and values asynchronously.
-            var items = await conf;
-
+            // read all rows into a dictionary of config keys and values asynchronously. 
             foreach (var item in items)
             {
                 var configSectionPath = item.configSectionPath; // e.g MySection:MySubSection or to support named options binding MySection:MySubSection-[name]
@@ -66,7 +68,7 @@ public class JsonItemAsyncConfigurationProvider : IAsyncConfigurationProvider, I
 
     public void Dispose()
     {
-        if (_changeTokenProducer is IDisposable disposable)
+        if (_disposeItemsProviderOnDispose && _asyncItemsProvider is IDisposable disposable)
         {
             disposable.Dispose();
         }

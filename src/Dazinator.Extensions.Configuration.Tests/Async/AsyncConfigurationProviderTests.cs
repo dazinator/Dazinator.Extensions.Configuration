@@ -1,10 +1,9 @@
 namespace Dazinator.Extensions.Configuration.Tests.Async;
-using Dazinator.Extensions.Configuration.Tests;
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dazinator.Extensions.Configuration.Async;
+using Dazinator.Extensions.Configuration.Tests;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -21,7 +20,7 @@ public class AsyncConfigurationProviderTests
     {
 
         var configurationBuilder = new ConfigurationBuilder();
-        configurationBuilder.AddAsyncProvider((source) =>
+        await configurationBuilder.AddProviderAsync((source) =>
         {
             source.ChangeTokenProducer = () => EmptyChangeToken.Instance; // trigger your change token to cause a reload.
             source.OnLoadConfigurationAsync = LoadConfigurationAsync;
@@ -46,17 +45,17 @@ public class AsyncConfigurationProviderTests
         var testProvider = new TestAsyncConfigurationProvider();
 
         var configurationBuilder = new ConfigurationBuilder();
-        configurationBuilder.AddAsyncProvider(testProvider, disposeWhenConfigurationDisposed: true); // if false (default), you are responsible for disposing of the provider.
+        await configurationBuilder.AddProviderAsync(testProvider, disposeWhenConfigurationDisposed: true); // if false (default), you are responsible for disposing of the provider.
         configurationBuilder.Sources.Count.ShouldBe(1);
     }
 
     [Fact]
-    public async Task CanReloadAsync()
+    public async Task CanInitialiseAsync()
     {
         var triggerTokenCtsSource = new CancellationTokenSource();
         var configurationBuilder = new ConfigurationBuilder();
 
-        configurationBuilder.AddAsyncProvider((source) =>
+        await configurationBuilder.AddProviderAsync((source) =>
         {
 
             var changeTokenProducer = () => new CancellationChangeToken(triggerTokenCtsSource.Token);
@@ -72,9 +71,48 @@ public class AsyncConfigurationProviderTests
             };
         });
 
+
+
         var configuration = configurationBuilder.Build();
         var setting = configuration["key1"];
-        setting.ShouldBeNull();
+        setting.ShouldBe("value1");
+    }
+
+    [Fact]
+    public async Task CanReloadAsync()
+    {
+        CancellationTokenSource triggerTokenCtsSource = null;
+        var changeTokenProducer = () =>
+        {
+
+            var newSource = new CancellationTokenSource();
+            var previousSource = Interlocked.Exchange(ref triggerTokenCtsSource, newSource);
+            previousSource?.Dispose();
+            return new CancellationChangeToken(triggerTokenCtsSource.Token);
+        };
+
+
+        var loadCount = 0;
+        var configurationBuilder = new ConfigurationBuilder();
+        await configurationBuilder.AddProviderAsync((source) =>
+         {
+             source.ChangeTokenProducer = changeTokenProducer;
+
+             source.OnLoadConfigurationAsync = async () =>
+             {
+                 loadCount++;
+                 await Task.Yield();
+
+                 return new Dictionary<string, string>()
+                 {
+                    { "key1", $"value{loadCount}" }
+                 };
+             };
+         });
+
+        var configuration = configurationBuilder.Build();
+        var setting = configuration["key1"];
+        setting.ShouldBe("value1");
 
         var signalled = false;
         using var registration = ChangeToken.OnChange(() => configuration.GetReloadToken(), () => signalled = true);
@@ -83,7 +121,7 @@ public class AsyncConfigurationProviderTests
         await Task.Delay(200);
 
         setting = configuration["key1"];
-        setting.ShouldBe("value1");
+        setting.ShouldBe("value2");
         signalled.ShouldBeTrue();
     }
 
@@ -111,23 +149,32 @@ public class AsyncConfigurationProviderTests
     public async Task CanUseOptionsMonitor()
     {
 
-        var configurationBuilder = new ConfigurationBuilder();
-        using var cts = new CancellationTokenSource();
-
-        configurationBuilder.AddAsyncProvider((source) =>
+        CancellationTokenSource triggerTokenCtsSource = null;
+        var changeTokenProducer = () =>
         {
 
-            var changeTokenProducer = () => new CancellationChangeToken(cts.Token);
+            var newSource = new CancellationTokenSource();
+            var previousSource = Interlocked.Exchange(ref triggerTokenCtsSource, newSource);
+            previousSource?.Dispose();
+            return new CancellationChangeToken(triggerTokenCtsSource.Token);
+        };
+
+        var configurationBuilder = new ConfigurationBuilder();
+        var loadCount = 0;
+        await configurationBuilder.AddProviderAsync((source) =>
+        {
 
             source.ChangeTokenProducer = changeTokenProducer;
 
             source.OnLoadConfigurationAsync = async () =>
             {
+                loadCount++;
                 await Task.Yield();
+
                 return new Dictionary<string, string>()
-                {
-                    { "Key1", "value1" }
-                };
+                 {
+                    { "Key1", $"value{loadCount}" }
+                 };
             };
         });
 
@@ -144,13 +191,13 @@ public class AsyncConfigurationProviderTests
             var options = sp.GetRequiredService<IOptionsMonitor<MyOptions>>();
 
             options.CurrentValue.ShouldNotBeNull();
-            options.CurrentValue.Key1.ShouldBeNull();
+            options.CurrentValue.Key1.ShouldBe("value1");
 
-            cts.Cancel();
+            triggerTokenCtsSource.Cancel();
 
             await Task.Delay(200);
 
-            options.CurrentValue.Key1.ShouldBe("value1");
+            options.CurrentValue.Key1.ShouldBe("value2");
         }
     }
 

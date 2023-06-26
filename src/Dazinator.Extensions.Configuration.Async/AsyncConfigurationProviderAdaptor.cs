@@ -6,12 +6,14 @@ using Microsoft.Extensions.Primitives;
 public class AsyncConfigurationProviderAdaptor : ConfigurationProvider, IDisposable
 {
     private readonly IAsyncConfigurationProvider _asyncProvider;
+    // private readonly Dictionary<string, string> _initialConfig;
     private readonly bool _disposeAsyncProviderOnDispose;
     private readonly IDisposable _changeTokenRegistration;
 
-    public AsyncConfigurationProviderAdaptor(IAsyncConfigurationProvider asyncProvider, bool disposeAsyncProviderOnDispose = false)
+    public AsyncConfigurationProviderAdaptor(IAsyncConfigurationProvider asyncProvider, IDictionary<string, string> initialConfig, bool disposeAsyncProviderOnDispose = false)
     {
         _asyncProvider = asyncProvider;
+        Data = initialConfig ?? Data;
         _disposeAsyncProviderOnDispose = disposeAsyncProviderOnDispose;
         var changeTokenProducer = () => _asyncProvider.GetReloadToken();
         _changeTokenRegistration = changeTokenProducer.OnChange(async () =>
@@ -19,15 +21,6 @@ public class AsyncConfigurationProviderAdaptor : ConfigurationProvider, IDisposa
             Data = await _asyncProvider.LoadAsync().ConfigureAwait(false);
             OnReload(); // handles the notification of changes to OptionsMonitor.
         });
-    }
-
-
-
-    public override void Load()
-    {
-        // Initially we set empty dictionary, then we will load it async.
-        var dic = new Dictionary<string, string>();
-        Data = dic;
     }
 
     public void Dispose()

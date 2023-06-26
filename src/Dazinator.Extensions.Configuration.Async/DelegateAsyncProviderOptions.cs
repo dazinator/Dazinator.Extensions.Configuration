@@ -16,11 +16,5 @@ public class DelegateAsyncProviderOptions
     /// </summary>
     public Func<Task<IDictionary<string, string>>> OnLoadConfigurationAsync { get; set; }
 
-    public IConfigurationProvider Build(IConfigurationBuilder builder)
-    {
 
-        var asyncProvider = new DelegateAsyncConfigurationProvider(ChangeTokenProducer, OnLoadConfigurationAsync);
-        var adaptor = new AsyncConfigurationProviderAdaptor(asyncProvider);
-        return adaptor;
-    }
 }
