@@ -16,11 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dazinator.Extensions.Config
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dazinator.Extensions.Configuration.Async", "Dazinator.Extensions.Configuration.Async\Dazinator.Extensions.Configuration.Async.csproj", "{4FB33C82-1694-43B2-AAF1-08C8AE500188}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dazinator.Extensions.Configuration.SqlServer", "Dazinator.Extensions.Configuration.SqlServer\Dazinator.Extensions.Configuration.SqlServer.csproj", "{5F4CBF03-3C27-4E59-B460-40CA15178F8E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dazinator.Extensions.Configuration.Json", "Dazinator.Extensions.Configuration.Json\Dazinator.Extensions.Configuration.Json.csproj", "{0C25981F-9DB4-491D-B087-F9F677D372B0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dazinator.Extensions.Configuration.AdoNet", "Dazinator.Extensions.Configuration.AdoNet\Dazinator.Extensions.Configuration.AdoNet.csproj", "{FC10AB9F-18E2-413F-BC4A-53BFD00E8E11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dazinator.Extensions.Configuration.Json", "Dazinator.Extensions.Configuration.Json\Dazinator.Extensions.Configuration.Json.csproj", "{0C25981F-9DB4-491D-B087-F9F677D372B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,18 +32,10 @@ Global
 		{4FB33C82-1694-43B2-AAF1-08C8AE500188}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FB33C82-1694-43B2-AAF1-08C8AE500188}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FB33C82-1694-43B2-AAF1-08C8AE500188}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F4CBF03-3C27-4E59-B460-40CA15178F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F4CBF03-3C27-4E59-B460-40CA15178F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F4CBF03-3C27-4E59-B460-40CA15178F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F4CBF03-3C27-4E59-B460-40CA15178F8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0C25981F-9DB4-491D-B087-F9F677D372B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0C25981F-9DB4-491D-B087-F9F677D372B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C25981F-9DB4-491D-B087-F9F677D372B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C25981F-9DB4-491D-B087-F9F677D372B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC10AB9F-18E2-413F-BC4A-53BFD00E8E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC10AB9F-18E2-413F-BC4A-53BFD00E8E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC10AB9F-18E2-413F-BC4A-53BFD00E8E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC10AB9F-18E2-413F-BC4A-53BFD00E8E11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -39,7 +39,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Dazinator.Extensions.Configuration.Async\Dazinator.Extensions.Configuration.Async.csproj" />
     <ProjectReference Include="..\Dazinator.Extensions.Configuration.Json\Dazinator.Extensions.Configuration.Json.csproj" />
-    <ProjectReference Include="..\Dazinator.Extensions.Configuration.SqlServer\Dazinator.Extensions.Configuration.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,4 +17,10 @@ public class DelegateAsyncProviderOptions
     public Func<Task<IDictionary<string, string>>> OnLoadConfigurationAsync { get; set; }
 
 
+    /// <summary>
+    /// Set a function that will be invoked after the configuration provider completes a reload.
+    /// </summary>
+    public Action OnAfterReloaded { get; set; }
+
+
 }

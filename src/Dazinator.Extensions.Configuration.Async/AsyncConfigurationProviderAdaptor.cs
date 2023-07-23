@@ -10,7 +10,10 @@ public class AsyncConfigurationProviderAdaptor : ConfigurationProvider, IDisposa
     private readonly bool _disposeAsyncProviderOnDispose;
     private readonly IDisposable _changeTokenRegistration;
 
-    public AsyncConfigurationProviderAdaptor(IAsyncConfigurationProvider asyncProvider, IDictionary<string, string> initialConfig, bool disposeAsyncProviderOnDispose = false)
+    public AsyncConfigurationProviderAdaptor(
+        IAsyncConfigurationProvider asyncProvider,
+        IDictionary<string, string> initialConfig,
+        bool disposeAsyncProviderOnDispose = false)
     {
         _asyncProvider = asyncProvider;
         Data = initialConfig ?? Data;

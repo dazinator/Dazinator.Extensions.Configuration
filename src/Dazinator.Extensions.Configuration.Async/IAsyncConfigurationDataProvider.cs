@@ -1,8 +1,8 @@
-namespace Dazinator.Extensions.Configuration.AdoNet;
+namespace Dazinator.Extensions.Configuration.Async;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
 
-public interface IAsyncItemProvider<TItem>
+public interface IAsyncConfigurationDataProvider<TItem>
 {
     Task<TItem> LoadAsync();
 

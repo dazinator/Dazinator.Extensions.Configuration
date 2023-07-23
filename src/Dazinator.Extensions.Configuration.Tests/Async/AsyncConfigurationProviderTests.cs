@@ -8,9 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Moq;
 using Shouldly;
 using Xunit.Categories;
 
+[UsesVerify]
 [UnitTest]
 public class AsyncConfigurationProviderTests
 {
@@ -115,14 +117,31 @@ public class AsyncConfigurationProviderTests
         setting.ShouldBe("value1");
 
         var signalled = false;
-        using var registration = ChangeToken.OnChange(() => configuration.GetReloadToken(), () => signalled = true);
 
-        triggerTokenCtsSource.Cancel();
-        await Task.Delay(200);
+
+        Func<IChangeToken> configChanged = configuration.GetReloadToken;
+        triggerTokenCtsSource.Cancel(); // trigger reload.
+
+        await configChanged.WaitOneAsync();
+
+        // using var registration = ChangeToken.OnChange(() => configuration.GetReloadToken(), () => signalled = true);
+        // get notified when reload has occurred.
+       // var reloadToken = configuration.GetReloadToken();
+
+
+      //  var mockOptionsSource = new Mock<IOptionsChangeTokenSource>();
+      //  mockOptionsSource.Setup(x => x.GetChangeToken()).Returns(() => configuration.GetReloadToken());
+
+       // mockAdaptor.Setup(x => x.LoadAsync()).Returns(GetConfigurationItemsSetOne);
+        //var mockChangeSournce = new Mock<IOptionsChangeTokenSource>()
+        //  await Task.Delay(200);
+
+        //  await Verify(configuration);
 
         setting = configuration["key1"];
+        var u = setting;
         setting.ShouldBe("value2");
-        signalled.ShouldBeTrue();
+        //signalled.ShouldBeTrue();
     }
 
     public class TestAsyncConfigurationProvider : IAsyncConfigurationProvider, IDisposable

@@ -11,19 +11,16 @@ using Microsoft.Extensions.Primitives;
 /// </summary>
 public class JsonItemAsyncConfigurationProvider : IAsyncConfigurationProvider
 {
-    private readonly IAsyncItemProvider<IList<JsonConfigurationItem>> _asyncItemsProvider;
-    // private readonly Func<IChangeToken> _changeTokenProducer;
+    private readonly IAsyncConfigurationDataProvider<IList<JsonConfigurationItem>> _asyncItemsProvider;
     private readonly ILogger<JsonItemAsyncConfigurationProvider> _logger;
     private readonly bool _disposeItemsProviderOnDispose;
 
     public JsonItemAsyncConfigurationProvider(
-        IAsyncItemProvider<IList<JsonConfigurationItem>> asyncItemsProvider,
-        ///  Func<Task<IList<JsonConfigurationItem>>> loadItemsFactory,
+        IAsyncConfigurationDataProvider<IList<JsonConfigurationItem>> asyncItemsProvider,
         ILogger<JsonItemAsyncConfigurationProvider> logger,
        bool disposeItemsProviderOnDispose = true)
     {
         _asyncItemsProvider = asyncItemsProvider;
-        // _changeTokenProducer = changeTokenProducer;
         _logger = logger;
         _disposeItemsProviderOnDispose = disposeItemsProviderOnDispose;
     }

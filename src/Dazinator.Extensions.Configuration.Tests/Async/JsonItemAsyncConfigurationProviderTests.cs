@@ -2,6 +2,7 @@ namespace Dazinator.Extensions.Configuration.Tests.Async;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dazinator.Extensions.Configuration.AdoNet;
+using Dazinator.Extensions.Configuration.Async;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -25,7 +26,7 @@ public class JsonItemAsyncConfigurationProviderTests
         using var scope = sp.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<JsonItemAsyncConfigurationProvider>>();
 
-        var mockAdaptor = new Mock<IAsyncItemProvider<IList<JsonConfigurationItem>>>();
+        var mockAdaptor = new Mock<IAsyncConfigurationDataProvider<IList<JsonConfigurationItem>>>();
         mockAdaptor.Setup(x => x.LoadAsync()).Returns(GetConfigurationItemsSetOne);
 
         var sut = new JsonItemAsyncConfigurationProvider(mockAdaptor.Object, logger);
